@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,6 +39,8 @@ namespace Arena.Characters
         /// </summary>
         public static Player Instance { get; private set; }
         public StateContainer State => _state;
+
+        public Action OnInteract { get; internal set; }
 
         private Camera _camera;
         private Vector2 _moveInput;
