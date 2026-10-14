@@ -1,9 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
-
+using Arena.Characters;
 
 namespace Arena.Characters
 {
+    /// <summary>
+    /// Zone that raises OnPlayer when the player enters it, or when the player interacts inside it.
+    /// It never acts on the player itself: the actions are set up in the Inspector.
+    /// </summary>
+    [RequireComponent(typeof(Collider))]
     public class PlayerEvent : MonoBehaviour
     {
         public enum Trigger
@@ -19,13 +24,18 @@ namespace Arena.Characters
             public Trigger Trigger;
         }
 
-        [SerializeField] private UnityEvent _onPlayer;
+        #region Fields
+
         [SerializeField] private Settings _settings;
+
+        [Tooltip("Actions raised for the player: heal, ammo, sound, hide this object...")]
+        [SerializeField] private UnityEvent _onPlayer;
 
         private bool _isListening;
 
+        #endregion
 
-        #region UNITY LIFECYCLE
+        #region Unity Lifecycle
 
         private void OnDisable()
         {
@@ -33,7 +43,7 @@ namespace Arena.Characters
             StopListening();
         }
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (!IsPlayer(other))
                 return;
@@ -44,13 +54,15 @@ namespace Arena.Characters
                 StartListening();
         }
 
-        void OnTriggerExit(Collider other)
+        private void OnTriggerExit(Collider other)
         {
             if (IsPlayer(other))
                 StopListening();
         }
 
         #endregion
+
+        #region Private Methods
 
         private bool IsPlayer(Collider other)
         {
@@ -79,5 +91,6 @@ namespace Arena.Characters
             _onPlayer.Invoke();
         }
 
+        #endregion
     }
 }
